@@ -32,7 +32,6 @@ const checkAuthCookie = async (headers: Headers) => {
     .split("; ")
     .find((row) => row.startsWith("8slpAutht="))
     ?.split("=")[1];
-  console.log("Token:", token);
 
   if (!token) {
     throw new AuthError(`Auth request failed. No cookies found.`, 401);
@@ -122,13 +121,13 @@ export const userRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       try {
-        const authResult = await authenticateUser(input.email, input.password);
-
-        const approvedEmails = process.env.APPROVED_EMAILS!.split(",").map(email => email.toLowerCase());
+        const approvedEmails = process.env.APPROVED_EMAILS!.split(",").map(email => email.trim().toLowerCase());
 
         if (!approvedEmails.includes(input.email.toLowerCase())) {
           throw new AuthError("Email not approved");
         }
+
+        const authResult = await authenticateUser(input.email, input.password);
 
         await saveUserToDatabase(input.email, authResult);
 

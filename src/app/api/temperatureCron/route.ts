@@ -8,6 +8,7 @@ import { setHeatingLevel, turnOnSide, turnOffSide } from "~/server/eight/eight";
 import { getCurrentHeatingStatus } from "~/server/eight/user";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 function createDateWithTime(baseDate: Date, timeString: string): Date {
   const [hours, minutes] = timeString.split(':').map(Number);
